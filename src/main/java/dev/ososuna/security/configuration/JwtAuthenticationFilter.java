@@ -2,6 +2,9 @@ package dev.ososuna.security.configuration;
 
 import java.io.IOException;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
+  private final UserDetailsService userDetailsService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -30,6 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     jwt = authHeader.substring(7);
     email = jwtService.extractUsername(jwt);
+    if(email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+      UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+    }
   }
   
 }
