@@ -1,4 +1,4 @@
-package dev.ososuna.security.models;
+package dev.ososuna.security.model;
 
 import java.util.Collection;
 import java.util.List;
